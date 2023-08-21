@@ -1,5 +1,7 @@
 package com.tohir.blog.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,23 @@ public class PostServiceImpl implements PostService {
 
         return postResponse;
         
+    }
+
+    @Override
+    public List<PostDto> getAllPosts() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private PostDto mapToDto(Post post) {
+        PostDto postDto = new PostDto();
+        postDto.setId(post.getId());
+        postDto.setTitle(post.getTitle());
+        postDto.setDescription(post.getDescription());
+        postDto.setContent(post.getContent());
+
+        return postDto;
+
     }
     
 }
