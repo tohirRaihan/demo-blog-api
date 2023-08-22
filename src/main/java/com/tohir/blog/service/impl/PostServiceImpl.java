@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tohir.blog.entity.Post;
+import com.tohir.blog.exception.ResourceNotFoundException;
 import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.PostService;
@@ -37,8 +38,18 @@ public class PostServiceImpl implements PostService {
         return posts.stream().map(post -> mapToDto(post)).collect(Collectors.toList());
     }
 
+    @Override
+    public PostDto getPostById(Long id) {
+
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+id));
+        
+        return mapToDto(post);
+
+    }
+
     // Convert Entity to DTO
     private PostDto mapToDto(Post post) {
+
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
@@ -51,12 +62,14 @@ public class PostServiceImpl implements PostService {
 
     // Convert DTO to Entity
     private Post mapToPost(PostDto postDto) {
+
         Post post = new Post();
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
         post.setContent(postDto.getContent());
 
         return post;
+        
     }
     
 }
