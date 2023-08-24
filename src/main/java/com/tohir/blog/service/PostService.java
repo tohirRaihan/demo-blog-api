@@ -1,14 +1,13 @@
 package com.tohir.blog.service;
 
-import java.util.List;
-
 import com.tohir.blog.payload.PostDto;
+import com.tohir.blog.payload.PostResponse;
 
 public interface PostService {
     
     PostDto createPost(PostDto postDto);
 
-    List<PostDto> getAllPosts(int pageNo, int pageSize);
+    PostResponse getAllPosts(int pageNo, int pageSize);
 
     PostDto getPostById(Long id);
 
