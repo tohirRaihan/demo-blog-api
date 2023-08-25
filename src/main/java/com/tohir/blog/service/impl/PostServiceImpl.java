@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.tohir.blog.entity.Post;
@@ -33,14 +34,16 @@ public class PostServiceImpl implements PostService {
         PostDto postResponse = mapToDto(newPost);
 
         return postResponse;
-        
+
     }
 
     @Override
-    public PostResponse getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
 
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         // create pagable instance
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
         Page<Post> posts = postRepository.findAll(pageable);
 
@@ -63,8 +66,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto getPostById(Long id) {
 
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+id));
-        
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
+
         return mapToDto(post);
 
     }
@@ -73,7 +76,7 @@ public class PostServiceImpl implements PostService {
     public PostDto updatePost(PostDto postDto, Long id) {
 
         // get post by id from the database
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+id));
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
 
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
@@ -82,14 +85,14 @@ public class PostServiceImpl implements PostService {
         Post updatedPost = postRepository.save(post);
 
         return mapToDto(updatedPost);
-        
+
     }
 
     @Override
     public void deletePostById(Long id) {
 
         // get post by id from the database
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+id));
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
 
         postRepository.delete(post);
 
@@ -117,7 +120,7 @@ public class PostServiceImpl implements PostService {
         post.setContent(postDto.getContent());
 
         return post;
-        
+
     }
-    
+
 }
