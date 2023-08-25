@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.payload.PostResponse;
 import com.tohir.blog.service.PostService;
+import com.tohir.blog.utils.AppConstants;
 
 @RestController
 @RequestMapping("/api/v1/posts")
 public class PostController {
-    
+
     @Autowired
     private PostService postService;
 
@@ -33,11 +34,10 @@ public class PostController {
 
     @GetMapping
     public PostResponse getAllPosts(
-        @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-        @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-        @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir
-    ) {
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir) {
         return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
@@ -51,7 +51,7 @@ public class PostController {
     public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable Long id) {
 
         PostDto postResponse = postService.updatePost(postDto, id);
-        
+
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
 
     }
@@ -61,9 +61,9 @@ public class PostController {
     public ResponseEntity<String> deletePostById(@PathVariable Long id) {
 
         postService.deletePostById(id);
-        
+
         return new ResponseEntity<>("Post Deleted Successfully", HttpStatus.OK);
-        
+
     }
 
 }
