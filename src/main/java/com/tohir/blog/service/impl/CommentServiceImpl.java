@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tohir.blog.entity.Comment;
 import com.tohir.blog.entity.Post;
+import com.tohir.blog.exception.BlogAPIException;
 import com.tohir.blog.exception.ResourceNotFoundException;
 import com.tohir.blog.payload.CommentDto;
 import com.tohir.blog.payload.PostDto;
@@ -47,6 +49,20 @@ public class CommentServiceImpl implements CommentService {
 
         // convert list of comment entities to list of comment dtos
         return comments.stream().map(comment -> mapToDto(comment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDto getCommentById(Long postId, Long commentId) {
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+postId));
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", ""+commentId));
+
+        if (!comment.getPost().getId().equals(post.getId())) {
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment doesn't belongs to Post");
+        }
+        
+        return mapToDto(comment);
     }
 
     // convert Entity to DTO
