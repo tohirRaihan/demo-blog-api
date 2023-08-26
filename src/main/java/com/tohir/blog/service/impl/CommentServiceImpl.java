@@ -1,5 +1,8 @@
 package com.tohir.blog.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +10,7 @@ import com.tohir.blog.entity.Comment;
 import com.tohir.blog.entity.Post;
 import com.tohir.blog.exception.ResourceNotFoundException;
 import com.tohir.blog.payload.CommentDto;
+import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.repository.CommentRepository;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.CommentService;
@@ -25,15 +29,24 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = mapToEntity(commentDto);
 
         // receive Post entity by id
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", ""+postId));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + postId));
 
         // set Post to Comment entity
         comment.setPost(post);
 
         // save Comment entity to DB
         Comment newComment = commentRepository.save(comment);
-        
+
         return mapToDto(newComment);
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+
+        // convert list of comment entities to list of comment dtos
+        return comments.stream().map(comment -> mapToDto(comment)).collect(Collectors.toList());
     }
 
     // convert Entity to DTO
@@ -57,5 +70,5 @@ public class CommentServiceImpl implements CommentService {
 
         return comment;
     }
-    
+
 }
