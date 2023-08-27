@@ -20,6 +20,8 @@ import com.tohir.blog.payload.PostResponse;
 import com.tohir.blog.service.PostService;
 import com.tohir.blog.utils.AppConstants;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/posts")
 public class PostController {
@@ -28,7 +30,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
@@ -48,7 +50,7 @@ public class PostController {
 
     // update post by id Rest API
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto, @PathVariable Long id) {
+    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable Long id) {
 
         PostDto postResponse = postService.updatePost(postDto, id);
 

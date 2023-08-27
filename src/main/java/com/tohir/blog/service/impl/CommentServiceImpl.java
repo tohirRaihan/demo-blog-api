@@ -13,7 +13,6 @@ import com.tohir.blog.entity.Post;
 import com.tohir.blog.exception.BlogAPIException;
 import com.tohir.blog.exception.ResourceNotFoundException;
 import com.tohir.blog.payload.CommentDto;
-import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.repository.CommentRepository;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.CommentService;
