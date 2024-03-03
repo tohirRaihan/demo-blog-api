@@ -1,5 +1,7 @@
 package com.tohir.blog.service;
 
+import java.util.List;
+
 import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.payload.PostResponse;
 
@@ -14,5 +16,7 @@ public interface PostService {
     PostDto updatePost( PostDto postDto, Long id);
 
     void deletePostById(Long id);
+
+    List<PostDto> getPostsByCategory(Long categoryId);
 
 }

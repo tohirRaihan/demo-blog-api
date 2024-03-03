@@ -1,6 +1,7 @@
 package com.tohir.blog.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,8 +26,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    @Autowired
     private PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
@@ -56,10 +60,9 @@ public class PostController {
         PostDto postResponse = postService.updatePost(postDto, id);
 
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
-
     }
 
-    // update post by id Rest API
+    // delete post by id Rest API
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePostById(@PathVariable Long id) {
@@ -67,7 +70,14 @@ public class PostController {
         postService.deletePostById(id);
 
         return new ResponseEntity<>("Post Deleted Successfully", HttpStatus.OK);
+    }
 
+    // Build Get Posts by Category REST API
+    // http://localhost:8080/api/posts/category/3
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable("id") Long categoryId) {
+        List<PostDto> postDtos = postService.getPostsByCategory(categoryId);
+        return ResponseEntity.ok(postDtos);
     }
 
 }

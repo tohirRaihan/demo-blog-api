@@ -4,33 +4,45 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.tohir.blog.entity.Category;
 import com.tohir.blog.entity.Post;
 import com.tohir.blog.exception.ResourceNotFoundException;
 import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.payload.PostResponse;
+import com.tohir.blog.repository.CategoryRepository;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.PostService;
 
 @Service
 public class PostServiceImpl implements PostService {
 
-    @Autowired
     private PostRepository postRepository;
 
-    @Autowired
     private ModelMapper mapper;
+
+    private CategoryRepository categoryRepository;
+
+    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper,
+            CategoryRepository categoryRepository) {
+        this.postRepository = postRepository;
+        this.mapper = mapper;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public PostDto createPost(PostDto postDto) {
+        Category category = categoryRepository.findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId().toString()));
+
         // convert DTO to Entity
         Post post = mapToEntity(postDto);
+        post.setCategory(category);
 
         Post newPost = postRepository.save(post);
 
@@ -38,7 +50,6 @@ public class PostServiceImpl implements PostService {
         PostDto postResponse = mapToDto(newPost);
 
         return postResponse;
-
     }
 
     @Override
@@ -73,23 +84,26 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
 
         return mapToDto(post);
-
     }
 
     @Override
     public PostDto updatePost(PostDto postDto, Long id) {
 
         // get post by id from the database
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id.toString()));
+
+        Category category = categoryRepository.findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId().toString()));
 
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
         post.setContent(postDto.getContent());
+        post.setCategory(category);
 
         Post updatedPost = postRepository.save(post);
 
         return mapToDto(updatedPost);
-
     }
 
     @Override
@@ -99,7 +113,18 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", "" + id));
 
         postRepository.delete(post);
+    }
 
+    @Override
+    public List<PostDto> getPostsByCategory(Long categoryId) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId.toString()));
+
+        List<Post> posts = postRepository.findByCategoryId(categoryId);
+
+        return posts.stream().map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     // Convert Entity to DTO
@@ -114,7 +139,6 @@ public class PostServiceImpl implements PostService {
         // postDto.setContent(post.getContent());
 
         return postDto;
-
     }
 
     // Convert DTO to Entity
@@ -128,7 +152,6 @@ public class PostServiceImpl implements PostService {
         // post.setContent(postDto.getContent());
 
         return post;
-
     }
 
 }
