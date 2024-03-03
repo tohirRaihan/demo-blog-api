@@ -18,6 +18,7 @@ import com.tohir.blog.payload.LoginDto;
 import com.tohir.blog.payload.RegisterDto;
 import com.tohir.blog.repository.RoleRepository;
 import com.tohir.blog.repository.UserRepository;
+import com.tohir.blog.security.JwtTokenProvider;
 import com.tohir.blog.service.AuthService;
 
 @Service
@@ -27,13 +28,15 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
-            RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+            RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "User Logged in successfully!!";
+        return jwtTokenProvider.generateToken(authentication);
     }
 
     @Override
