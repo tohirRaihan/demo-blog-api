@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog
+    ports:
+      - "3306:3306"
+    networks:
+      demo-blog-api-net:
+
+  demo-blog-api:
+    container_name: demo-blog-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysqldb
+    networks:
+      demo-blog-api-net:
+    restart: on-failure
+
+networks:
+  demo-blog-api-net:
+    name: demo-blog-api-net
