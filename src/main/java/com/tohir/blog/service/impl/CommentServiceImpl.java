@@ -16,18 +16,15 @@ import com.tohir.blog.repository.CommentRepository;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.CommentService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private CommentRepository commentRepository;
-    private PostRepository postRepository;
-    private ModelMapper mapper;
-
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, ModelMapper mapper) {
-        this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
-        this.mapper = mapper;
-    }
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final ModelMapper mapper;
 
     @Override
     public CommentDto createComment(Long postId, CommentDto commentDto) {

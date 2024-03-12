@@ -19,21 +19,15 @@ import com.tohir.blog.repository.CategoryRepository;
 import com.tohir.blog.repository.PostRepository;
 import com.tohir.blog.service.PostService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-    private PostRepository postRepository;
-
-    private ModelMapper mapper;
-
-    private CategoryRepository categoryRepository;
-
-    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper,
-            CategoryRepository categoryRepository) {
-        this.postRepository = postRepository;
-        this.mapper = mapper;
-        this.categoryRepository = categoryRepository;
-    }
+    private final PostRepository postRepository;
+    private final ModelMapper mapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public PostDto createPost(PostDto postDto) {

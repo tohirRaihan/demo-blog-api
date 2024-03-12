@@ -12,16 +12,14 @@ import com.tohir.blog.payload.CategoryDto;
 import com.tohir.blog.repository.CategoryRepository;
 import com.tohir.blog.service.CategoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private ModelMapper modelMapper;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
-        this.categoryRepository = categoryRepository;
-        this.modelMapper = modelMapper;
-    }
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public CategoryDto addCategory(CategoryDto categoryDto) {
