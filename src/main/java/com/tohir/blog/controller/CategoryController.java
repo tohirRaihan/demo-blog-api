@@ -17,15 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tohir.blog.payload.CategoryDto;
 import com.tohir.blog.service.CategoryService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    private final CategoryService categoryService;
 
     // Build Add Category REST API
     @PostMapping

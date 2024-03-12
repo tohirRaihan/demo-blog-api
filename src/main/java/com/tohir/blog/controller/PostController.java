@@ -21,16 +21,14 @@ import com.tohir.blog.service.PostService;
 import com.tohir.blog.utils.AppConstants;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    private PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
+    private final PostService postService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

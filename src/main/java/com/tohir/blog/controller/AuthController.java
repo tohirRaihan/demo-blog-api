@@ -12,15 +12,14 @@ import com.tohir.blog.payload.LoginDto;
 import com.tohir.blog.payload.RegisterDto;
 import com.tohir.blog.service.AuthService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private final AuthService authService;
 
     // Build Login REST API
     @PostMapping(value = {"/login", "/signin"})

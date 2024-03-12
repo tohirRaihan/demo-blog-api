@@ -17,16 +17,14 @@ import com.tohir.blog.payload.CommentDto;
 import com.tohir.blog.service.CommentService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/posts/{postId}/comments")
 public class CommentController {
 
-    private CommentService commentService;
-
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@PathVariable Long postId,
