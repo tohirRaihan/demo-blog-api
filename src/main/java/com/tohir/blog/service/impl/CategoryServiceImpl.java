@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tohir.blog.entity.Category;
 import com.tohir.blog.exception.ResourceNotFoundException;
+import com.tohir.blog.mapper.CategoryMapper;
 import com.tohir.blog.payload.CategoryDto;
 import com.tohir.blog.repository.CategoryRepository;
 import com.tohir.blog.service.CategoryService;
@@ -25,7 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto addCategory(CategoryDto categoryDto) {
         Category category = modelMapper.map(categoryDto, Category.class);
         Category savedCategory = categoryRepository.save(category);
-        return modelMapper.map(savedCategory, CategoryDto.class);
+        // return modelMapper.map(savedCategory, CategoryDto.class);
+        return CategoryMapper.MAPPER.mapToCategoryDto(savedCategory);
     }
 
     @Override

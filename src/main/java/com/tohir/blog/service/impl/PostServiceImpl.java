@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tohir.blog.entity.Category;
 import com.tohir.blog.entity.Post;
 import com.tohir.blog.exception.ResourceNotFoundException;
+import com.tohir.blog.mapper.PostMapper;
 import com.tohir.blog.payload.PostDto;
 import com.tohir.blog.payload.PostResponse;
 import com.tohir.blog.repository.CategoryRepository;
@@ -42,6 +43,7 @@ public class PostServiceImpl implements PostService {
 
         // convert Entity to DTO
         PostDto postResponse = mapToDto(newPost);
+        // PostDto postResponse = PostMapper.MAPPER.mapToPostDto(newPost);
 
         return postResponse;
     }
